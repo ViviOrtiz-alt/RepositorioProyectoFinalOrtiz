@@ -92,7 +92,38 @@
                             Regístrate para acceder a la plataforma
                         </p>
 
-                        <!-- Aquí va el formulario -->
+                        <!-- Formulario -->
+                        <form action="registroUsuario.jsp" method="post">
+
+                            <!-- NOMBRE -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Nombre completo</label>
+                                <input type="text" class="form-control rounded-pill px-3" name="nombre" placeholder="Ingrese su nombre" required>
+                            </div>
+
+                            <!-- CORREO -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Correo electrónico</label>
+                                <input type="email" class="form-control rounded-pill px-3" name="correo" placeholder="correo@ejemplo.com" required>
+                            </div>
+
+                            <!-- CONTRASEÑA -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Contraseña</label>
+                                <input type="password" class="form-control rounded-pill px-3" name="password" placeholder="Ingrese una contraseña" required>
+                            </div>
+
+                            <!-- CONFIRMAR CONTRASEÑA -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Confirmar contraseña</label>
+                                <input type="password" class="form-control rounded-pill px-3" name="confirmarPassword" placeholder="Repita la contraseña" required>
+                            </div>
+
+                            <!-- BOTÓN -->
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-warning rounded-pill fw-semibold">Registrarse</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
