@@ -15,7 +15,23 @@
         response.sendRedirect("index.jsp");
         return;
     }
+
+ // Obtener id_usuario
+    int idUsuario = 0;
+    PreparedStatement psId = conexion.prepareStatement(
+        "SELECT id_usuario FROM usuarios WHERE correo = ?"
+    );
+    psId.setString(1, correo);
+    ResultSet rsId = psId.executeQuery();
+
+    if(rsId.next()){
+        idUsuario = rsId.getInt("id_usuario");
+    }
+
+    rsId.close();
+    psId.close();
 %>
+
 
 <!DOCTYPE html>
 <html lang="es">
