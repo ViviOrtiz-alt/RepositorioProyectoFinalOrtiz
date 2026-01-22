@@ -61,7 +61,6 @@
     window.location.href="index.jsp";
 </script>
 <% } %>
-%>
 
 
 <!DOCTYPE html>
@@ -80,7 +79,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">Viviana Ortiz</a>
+        <a class="navbar-brand fw-bold" href="#">Aprendizaje Digital</a>
     </div>
 </nav>
 
@@ -113,7 +112,7 @@
 
                 <!-- BOTÓN -->
                 <div class="d-grid mt-4">
-                    <button type="button" class="btn btn-warning rounded-pill fw-semibold">
+                    <button type="button" class="btn btn-warning rounded-pill fw-semibold" style="background-color: #24343d; color: white;">
                         Iniciar sesión
                     </button>
                 </div>
@@ -134,8 +133,12 @@
         </div>
     </div>
 </section>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Viviana Ortiz Tellez</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+ </body>
 </html>
 
