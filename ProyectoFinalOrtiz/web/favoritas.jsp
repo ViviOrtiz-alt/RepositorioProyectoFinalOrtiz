@@ -144,5 +144,10 @@
 
 </div>
 
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Viviana Ortiz Tellez</p></div>
+        </footer>
+
 </body>
 </html>
