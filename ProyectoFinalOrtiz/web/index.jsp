@@ -6,11 +6,61 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="conexion.jsp"%>
-<%@page import="java.sql.*"%>
+<%@page import="java.sql.*, java.security.MessageDigest"%>
 
 <%
     String correo = request.getParameter("correo");
     String password = request.getParameter("password");
+    String mensaje = "";
+    
+    if(correo != null && password != null) {
+        try {
+            // Cifrar contraseña con SHA-256
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes());
+            byte[] hash = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for(byte b : hash) sb.append(String.format("%02x", b));
+            String passwordCifrada = sb.toString();
+
+            // Consultar usuario en la base de datos
+            PreparedStatement ps = conexion.prepareStatement(
+                "SELECT * FROM usuarios WHERE correo = ? AND password = ?"
+            );
+            ps.setString(1, correo);
+            ps.setString(2, passwordCifrada);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                // Guardar datos en sesión
+                int idUsuario = rs.getInt("id_usuario");
+                String nombre = rs.getString("nombre");
+                String correoBD = rs.getString("correo");
+
+                session.setAttribute("id_usuario", idUsuario);
+                session.setAttribute("nombre", nombre);
+                session.setAttribute("correo", correoBD);
+
+                // Redireccionar al home
+                response.sendRedirect("home.jsp");
+            } else {
+                mensaje = "Correo o contraseña incorrectos";
+            }
+
+            rs.close();
+            ps.close();
+        } catch(Exception e) {
+            mensaje = "Error: " + e.getMessage();
+        }
+    }
+%>
+
+<% if(!mensaje.isEmpty()) { %>
+<script>
+    alert("<%=mensaje%>");
+    window.location.href="index.jsp";
+</script>
+<% } %>
 %>
 
 
