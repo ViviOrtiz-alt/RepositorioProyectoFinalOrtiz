@@ -5,6 +5,14 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="conexion.jsp"%>
+<%@page import="java.sql.*"%>
+
+<%
+    String correo = request.getParameter("correo");
+    String password = request.getParameter("password");
+%>
+
 
 <!DOCTYPE html>
 <html lang="es">
