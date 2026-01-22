@@ -112,7 +112,7 @@
 
                 <!-- BOTÓN -->
                 <div class="d-grid mt-4">
-                    <button type="button" class="btn btn-warning rounded-pill fw-semibold" style="background-color: #24343d; color: white;">
+                    <button type="submit" class="btn btn-warning rounded-pill fw-semibold" style="background-color: #24343d; color: white;" >
                         Iniciar sesión
                     </button>
                 </div>
