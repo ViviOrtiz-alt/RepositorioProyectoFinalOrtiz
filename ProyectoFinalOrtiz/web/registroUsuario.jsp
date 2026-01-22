@@ -71,5 +71,34 @@
         </div>
     </nav>
 
+    <!-- CONTENIDO -->
+<section class="py-5 bg-section" style="background-image:url('img/inteligencia-artificial.jpg')">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-3 fw-semibold">
+                            Crear cuenta
+                        </h3>
+
+                        <% if (!mensaje.isEmpty()) { %>
+                        <div class="alert alert-<%= tipoMensaje %> text-center" role="alert">
+                            <%= mensaje %>
+                        </div>
+                        <% } %>
+
+                        <p class="text-center text-muted mb-4">
+                            Regístrate para acceder a la plataforma
+                        </p>
+
+                        <!-- Aquí va el formulario -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
     </body>
 </html>
