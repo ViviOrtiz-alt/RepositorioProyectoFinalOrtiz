@@ -141,5 +141,11 @@
     </div>
 </section>
     
+<!-- FOOTER -->
+<footer class="py-4 bg-dark">
+    <div class="container text-center">
+        <p class="m-0 text-white">© Viviana Ortiz Tellez</p>
+    </div>
+</footer>                   
     </body>
 </html>
