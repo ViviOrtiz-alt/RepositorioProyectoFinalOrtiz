@@ -4,14 +4,29 @@
     Author     : Vivi Ortiz
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ include file="conexion.jsp" %>
+<%@ page import="java.sql.*" %>
+
+<%
+    // Validar sesión
+    String correo = (String) session.getAttribute("correo");
+    if(correo == null){
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Favoritas</title>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<h2 style="text-align:center;">Mis Favoritos</h2>
+
+</body>
 </html>
