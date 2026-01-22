@@ -67,5 +67,82 @@
     
 <h2 style="text-align:center;">Mis Favoritos</h2>
 
+<div class="tarjetas-container">
+<%
+    // Consultar favoritos (tarjetas y videos)
+    PreparedStatement ps = conexion.prepareStatement(
+        "SELECT f.tipo_contenido, f.id_contenido, " +
+"t.titulo AS tarjeta_titulo, t.frente, t.reverso, " +
+"v.titulo AS video_titulo, v.descripcion, v.url_video, " +
+"c.titulo AS chat_titulo, c.descripcion AS chat_descripcion " +
+"FROM favoritos f " +
+"LEFT JOIN tarjetas_estudio t ON f.tipo_contenido='tarjeta' AND f.id_contenido=t.id_tarjeta " +
+"LEFT JOIN videos v ON f.tipo_contenido='video' AND f.id_contenido=v.id_video " +
+"LEFT JOIN chats_home c ON f.tipo_contenido='chat' AND f.id_contenido=c.id_chat " +
+"WHERE f.id_usuario = ?"
+
+    );
+    ps.setInt(1, idUsuario);
+    ResultSet rs = ps.executeQuery();
+
+    while(rs.next()){
+        String tipo = rs.getString("tipo_contenido");
+
+        if("tarjeta".equals(tipo)){
+%>
+    <div class="favorita tarjeta">
+        <div class="tarjeta-inner">
+            <div class="tarjeta-front">
+                <h4><%= rs.getString("tarjeta_titulo") %></h4>
+                <p><%= rs.getString("frente") %></p>
+            </div>
+            <div class="tarjeta-back">
+                <p><%= rs.getString("reverso") %></p>
+                <a href="marcarFavorita.jsp?accion=quitar&tipo_contenido=tarjeta&id_contenido=<%= rs.getInt("id_contenido") %>">
+                    ❤️ Quitar de favoritos
+                </a>
+            </div>
+        </div>
+    </div>
+<%
+        } else if("video".equals(tipo)){
+%>
+    <div class="favorita video">
+        <h3><%= rs.getString("video_titulo") %></h3>
+        <p><%= rs.getString("descripcion") %></p>
+        <iframe src="<%= rs.getString("url_video") %>" frameborder="0" allowfullscreen></iframe>
+        <a href="home.jsp?accion=quitar&tipo_contenido=video&id_contenido=<%= rs.getInt("id_contenido") %>">
+            ❤️ Quitar de favoritos
+        </a>
+    </div>
+            
+            <% } else if("chat".equals(tipo)) { %>
+
+<div class="favorita chat">
+    <h3><%= rs.getString("chat_titulo") %></h3>
+    <p><%= rs.getString("chat_descripcion") %></p>
+
+    <a href="chat.jsp?id=<%= rs.getInt("id_contenido") %>">
+        💬 Abrir chat
+    </a>
+
+    <br>
+
+    <a href="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= rs.getInt("id_contenido") %>">
+        ❤️ Quitar de favoritos
+    </a>
+</div>
+
+<% } %>
+
+        
+<%
+    }
+    rs.close();
+    ps.close();
+%>
+
+</div>
+
 </body>
 </html>
