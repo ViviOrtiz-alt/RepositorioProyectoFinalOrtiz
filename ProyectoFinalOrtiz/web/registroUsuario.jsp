@@ -5,6 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="conexion.jsp"%>
+<%@page import="java.security.MessageDigest"%>
+<%@page import="java.sql.PreparedStatement"%>
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
