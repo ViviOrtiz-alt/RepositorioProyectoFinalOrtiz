@@ -37,18 +37,20 @@
             <h3 class="text-center mb-3 fw-semibold">Bienvenido</h3>
             <p class="text-center text-muted mb-4">Inicia sesión para continuar</p>
 
-            <form>
+            <form action="index.jsp" method="post">
                 
                 <!-- CORREO -->
                 <div class="mb-3">
                     <label class="form-label text-muted">Correo electrónico</label>
-                    <input type="email" class="form-control rounded-pill px-3">
+                    <input type="email" class="form-control rounded-pill px-3"
+                           name="correo" placeholder="correo@ejemplo.com" required>
                 </div>
 
                 <!-- CONTRASEÑA -->
                 <div class="mb-3">
                     <label class="form-label text-muted">Contraseña</label>
-                    <input type="password" class="form-control rounded-pill px-3">
+                     <input type="password" class="form-control rounded-pill px-3"
+                           name="password" placeholder="Ingrese su contraseña" required>
                 </div>
 
                 <!-- BOTÓN -->
