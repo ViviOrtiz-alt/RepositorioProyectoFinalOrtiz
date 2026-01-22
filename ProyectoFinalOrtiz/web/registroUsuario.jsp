@@ -124,6 +124,16 @@
                                 <button type="submit" class="btn btn-warning rounded-pill fw-semibold">Registrarse</button>
                             </div>
                         </form>
+                        
+                        <!-- ENLACES -->
+                        <div class="text-center mt-4">
+                            <p class="mb-1 text-muted">
+                                ¿Ya tienes cuenta?
+                                <a href="index.jsp" class="fw-semibold text-decoration-none text-black-50">
+                                Inicia sesión
+                                </a>
+                            </p>
+                        </div>                      
                     </div>
                 </div>
             </div>
