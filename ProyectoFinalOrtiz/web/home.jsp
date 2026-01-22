@@ -85,7 +85,80 @@
     </div>
 </section>
 
+<div class="py-5 bg-image-full" style="background-image: url('img/Inicio3.jpg')">
+            <!-- Put anything you want here! The spacer below with inline CSS is just for demo purposes!-->
+            <div style="height: 20rem"></div>
+        </div>
+
+<!-- Sección principal de chats de apoyo -->
+<section class="py-5">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <h2 class="text-center mb-4">Chats de apoyo</h2>
+
+<%
+    // Captura el ID del usuario de la sesión actual
+    Integer idUsuario = (Integer) session.getAttribute("id_usuario");
+
+    // Consulta a la base de datos para obtener todos los chats disponibles
+    PreparedStatement ps = conexion.prepareStatement(
+        "SELECT id_chat, titulo, descripcion, url_chat, icono FROM chats_home"
+    );
+    ResultSet rs = ps.executeQuery();
+
+    // Itera sobre cada chat para mostrarlo en la página
+    while (rs.next()) {
+        int idChat = rs.getInt("id_chat");
+
+        // Verifica si este chat está marcado como favorito por el usuario
+        PreparedStatement psFav = conexion.prepareStatement(
+            "SELECT 1 FROM favoritos WHERE id_usuario = ? AND tipo_contenido = 'chat' AND id_contenido = ?"
+        );
+        psFav.setInt(1, idUsuario);
+        psFav.setInt(2, idChat);
+
+        ResultSet rsFav = psFav.executeQuery();
+        boolean esFavorito = rsFav.next();
+
+        // Cierra recursos de la consulta de favoritos
+        rsFav.close();
+        psFav.close();
+%>
+
+<!-- Tarjeta individual del chat -->
+<div class="card mb-3 shadow-sm">
+    <div class="row g-0 align-items-center">
+        <div class="col-md-3 text-center p-3">
+            <img src="<%= rs.getString("icono") %>" class="img-fluid" style="max-height: 80px;" alt="Icono chat">
+        </div>
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title fw-bold"><%= rs.getString("titulo") %></h5>
+                <p class="card-text text-muted"><%= rs.getString("descripcion") %></p>
+                <a href="<%= rs.getString("url_chat") %>" target="_blank" class="btn btn-outline-primary btn-sm me-2">Abrir chat</a>
+                <% if (esFavorito) { %>
+                    <a href="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= idChat %>" class="btn btn-outline-danger btn-sm">❤️ Quitar de favoritos</a>
+                <% } else { %>
+                    <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=chat&id_contenido=<%= idChat %>" class="btn btn-outline-warning btn-sm">🤍 Marcar como favorito</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%
+    }// Fin del while que recorre los chats
+    // Cierre de recursos de la consulta principal
+    rs.close();
+    ps.close();
+%>
+
+        </div>
+    </div>
+</section>
     
+
+
 </body>
 </html>
 
