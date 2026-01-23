@@ -48,6 +48,15 @@
             ps.executeUpdate();
             ps.close();
         }
-
+        
+        //Redirigir al listado correspondiente
+        if ("video".equals(tipoContenido)) {
+            response.sendRedirect("videos.jsp");
+        } else if ("tarjeta".equals(tipoContenido)) {
+            response.sendRedirect("tarjetas.jsp");
+        } else if ("chat".equals(tipoContenido)) {
+            response.sendRedirect("home.jsp#chats");
+        }
+    }
 %>
 
