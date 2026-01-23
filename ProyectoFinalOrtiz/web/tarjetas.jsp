@@ -5,6 +5,21 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="conexion.jsp"%>
+<%@page import="java.sql.*"%>
+
+
+<%
+    //Validar sesión
+    Integer idUsuario = (Integer) session.getAttribute("id_usuario");
+    if (idUsuario == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
