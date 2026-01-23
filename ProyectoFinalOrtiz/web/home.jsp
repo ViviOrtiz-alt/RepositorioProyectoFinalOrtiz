@@ -36,7 +36,44 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
         <div class="container">
             <a class="navbar-brand" href="#!">Aprendizaje Digital</a>
+         <!-- Opciones del nav -->
+        <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item">
+                <a class="nav-link" href="favoritas.jsp">
+                    <i class="bi bi-heart-fill text-danger"></i> Favoritos
+                </a>
+            </li>
+        </ul>
+
+        <!-- Menú usuario -->
+        <div class="dropdown ms-2">
+            <button class="btn btn-dark dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                ☰
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li class="px-3 py-2 text-center">
+                    <strong><%= session.getAttribute("nombre") %></strong><br>
+                    <small class="text-muted">
+                        <%= session.getAttribute("correo") %>
+                    </small>
+                </li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li class="text-center">
+                    <form action="logout.jsp" method="post" class="m-0">
+                        <button type="submit" class="dropdown-item text-danger">
+                            Cerrar sesión
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </div>
+      </div>
     </nav>
 
     <header class="py-5 home-bg-image-full" style="background-image: url('img/Fondo.jpg')">
