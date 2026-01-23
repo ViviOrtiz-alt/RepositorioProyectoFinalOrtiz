@@ -121,6 +121,48 @@
         psFav.close();
 %>
 
+<div class="tarjeta">
+    <div class="tarjeta-inner">
+
+        <div class="tarjeta-front">
+            <h4><%= rs.getString("titulo") %></h4>
+            <p><%= rs.getString("frente") %></p>
+        </div>
+
+        <div class="tarjeta-back">
+            <p><%= rs.getString("reverso") %></p>
+
+            <% if (esFavorita) { %>
+                <a href="tarjetas.jsp?accion=quitar&id_tarjeta=<%= idTarjeta %>"
+                   class="btn btn-sm btn-outline-danger mt-2">
+                    <i class="bi bi-heart-fill"></i> Quitar de favoritas
+                </a>
+            <% } else { %>
+                <a href="tarjetas.jsp?accion=agregar&id_tarjeta=<%= idTarjeta %>"
+                   class="btn btn-sm btn-outline-warning mt-2">
+                    <i class="bi bi-heart"></i> Marcar como favorita
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%
+    }
+    rs.close();
+    st.close();
+%>
+</div>
+
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">
+            Copyright &copy; Viviana Ortiz Tellez
+        </p>
+    </div>
+</footer>
+
 
 </body>
 </html>
