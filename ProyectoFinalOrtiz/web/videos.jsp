@@ -55,7 +55,7 @@
     </div>
 </nav> 
     
-<h2>Listado de videos</h2>
+<h2 style="margin: 10px 0;">Listado de videos</h2>
 
 <%
     PreparedStatement ps = conexion.prepareStatement(
@@ -107,3 +107,11 @@
     rs.close();
     ps.close();
 %>
+
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Viviana Ortiz Tellez</p></div>
+</footer>
+
+</body>
+</html>
