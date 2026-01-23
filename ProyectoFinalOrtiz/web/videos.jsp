@@ -56,3 +56,54 @@
 </nav> 
     
 <h2>Listado de videos</h2>
+
+<%
+    PreparedStatement ps = conexion.prepareStatement(
+        "SELECT id_video, titulo, descripcion, url_video FROM videos"
+    );
+    ResultSet rs = ps.executeQuery();
+
+  while (rs.next()) {
+
+        int idVideo = rs.getInt("id_video");
+
+        // 🔍 Verificar si el video es favorito
+        PreparedStatement psFav = conexion.prepareStatement(
+            "SELECT 1 FROM favoritos WHERE id_usuario = ? AND tipo_contenido = 'video' AND id_contenido = ?"
+        );
+        psFav.setInt(1, idUsuario);
+        psFav.setInt(2, idVideo);
+
+        ResultSet rsFav = psFav.executeQuery();
+        boolean esFavorito = rsFav.next();
+
+        rsFav.close();
+        psFav.close();
+%>
+
+    <div class="favorita video">
+        <h3><%= rs.getString("titulo") %></h3>
+        <p><%= rs.getString("descripcion") %></p>
+
+        <iframe
+            src="<%= rs.getString("url_video") %>"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+
+        <% if (esFavorito) { %>
+            <a href="marcarFavorita.jsp?accion=quitar&tipo_contenido=video&id_contenido=<%= idVideo %>">
+                ❤️ Quitar de favoritos
+            </a>
+        <% } else { %>
+            <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=video&id_contenido=<%= idVideo %>">
+                🤍 Marcar como favorito
+            </a>
+        <% } %>
+    </div>
+
+<%
+    }
+    rs.close();
+    ps.close();
+%>
