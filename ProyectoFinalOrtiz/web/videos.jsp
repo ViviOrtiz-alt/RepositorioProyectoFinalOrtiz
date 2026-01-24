@@ -9,7 +9,7 @@
 <%@ include file="conexion.jsp" %>
 
 <%
-    //  Validar sesión
+    // Validar sesión
     Integer idUsuario = (Integer) session.getAttribute("id_usuario");
     if (idUsuario == null) {
         response.sendRedirect("index.jsp");
@@ -26,7 +26,6 @@
 
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
 </head>
 <body>
 
@@ -53,9 +52,13 @@
             </li>
         </ul>
     </div>
-</nav> 
-    
-<h2 style="margin: 10px 0;">Listado de videos</h2>
+</nav>
+
+<h2 style="margin: 10px 0; text-align: center;">Listado de videos</h2>
+
+
+<!-- 🔹 CONTENEDOR DE LOS VIDEOS -->
+<div class="listado-videos">
 
 <%
     PreparedStatement ps = conexion.prepareStatement(
@@ -63,11 +66,11 @@
     );
     ResultSet rs = ps.executeQuery();
 
-  while (rs.next()) {
+    while (rs.next()) {
 
         int idVideo = rs.getInt("id_video");
 
-        // 🔍 Verificar si el video es favorito
+        // Verificar si el video es favorito
         PreparedStatement psFav = conexion.prepareStatement(
             "SELECT 1 FROM favoritos WHERE id_usuario = ? AND tipo_contenido = 'video' AND id_contenido = ?"
         );
@@ -81,7 +84,8 @@
         psFav.close();
 %>
 
-    <div class="favorita video">
+    <!-- 🔹 TARJETA DEL VIDEO -->
+    <div class="video-card">
         <h3><%= rs.getString("titulo") %></h3>
         <p><%= rs.getString("descripcion") %></p>
 
@@ -108,9 +112,16 @@
     ps.close();
 %>
 
-<!-- Footer-->
+</div>
+<!-- 🔹 FIN CONTENEDOR DE LOS VIDEOS -->
+
+<!-- Footer -->
 <footer class="py-5 bg-dark">
-    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Viviana Ortiz Tellez</p></div>
+    <div class="container">
+        <p class="m-0 text-center text-white">
+            Copyright &copy; Viviana Ortiz Tellez
+        </p>
+    </div>
 </footer>
 
 </body>
