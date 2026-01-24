@@ -240,6 +240,54 @@
 }
 
 
+/* Contenedor general del listado de videos */
+.listado-videos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+/* Tarjeta individual del video */
+.video-card {
+    width: 320px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Título del video */
+.video-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+/* Descripción del video */
+.video-card p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Iframe del video */
+.video-card iframe {
+    width: 100%;
+    height: 180px;
+    border-radius: 6px;
+    margin: 8px 0;
+}
+
+/* Enlace de favoritos */
+.video-card a {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   :root {
