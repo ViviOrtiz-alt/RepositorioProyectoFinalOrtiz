@@ -5,9 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@ page import="java.sql.*" %>
-
 <%@ include file="conexion.jsp" %>
 
 <%
@@ -23,6 +21,12 @@
     response.setHeader("Pragma", "no-cache");
 
     response.setDateHeader("Expires", 0);
+
+    // =========================
+    // TIMEOUT SESIÓN
+    // =========================
+
+    session.setMaxInactiveInterval(1800);
 
     // =========================
     // VALIDAR SESIÓN
@@ -70,10 +74,8 @@
 <div class="position-fixed bottom-0 end-0 p-3"
      style="z-index:1100">
 
-    <div id="toastOk"
-         class="toast align-items-center text-white bg-success border-0 show"
-         role="alert"
-         aria-live="assertive">
+    <div class="toast align-items-center text-white bg-success border-0 show"
+         role="alert">
 
         <div class="d-flex">
 
@@ -107,7 +109,6 @@
 
         </a>
 
-        <!-- NAV -->
         <ul class="navbar-nav ms-auto align-items-center">
 
             <li class="nav-item">
@@ -137,7 +138,9 @@
 
             </button>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow">
+            <!-- DROPDOWN CORREGIDO -->
+            <ul class="dropdown-menu dropdown-menu-end shadow"
+                style="min-width:220px;">
 
                 <li class="px-3 py-2 text-center">
 
@@ -218,12 +221,6 @@
         Este espacio está diseñado para facilitar el aprendizaje
         sobre la Inteligencia Artificial y sus aplicaciones actuales.
 
-        Aquí podrás explorar recursos interactivos,
-        herramientas prácticas y contenido pensado
-        para reforzar tus conocimientos de manera clara y accesible.
-
-        Selecciona una opción para comenzar.
-
     </p>
 
 </section>
@@ -233,7 +230,6 @@
 
     <div class="row g-3">
 
-        <!-- CARD 1 -->
         <div class="col-md-6">
 
             <div class="card h-100 shadow-sm">
@@ -261,7 +257,6 @@
 
         </div>
 
-        <!-- CARD 2 -->
         <div class="col-md-6">
 
             <div class="card h-100 shadow-sm">
@@ -308,46 +303,82 @@
 
         <div class="row justify-content-center">
 
+            <!-- ORDENAMIENTO -->
+            <div class="text-end mb-3">
+
+                <label for="ordenChats"
+                       class="me-2 text-muted">
+
+                    Ordenar:
+
+                </label>
+
+                <select id="ordenChats"
+                        class="form-select form-select-sm d-inline-block w-auto"
+                        onchange="ordenarChats(this.value)"
+                        aria-label="Ordenar chats">
+
+                    <option value="az">
+
+                        A → Z
+
+                    </option>
+
+                    <option value="za">
+
+                        Z → A
+
+                    </option>
+
+                </select>
+
+            </div>
+
             <h2 class="text-center mb-4">
 
                 Chats de apoyo
 
             </h2>
 
+            <!-- CONTENEDOR -->
+            <div id="contenedorChats">
+
 <%
-    Integer idUsuario =
-        (Integer) session.getAttribute("id_usuario");
+    try {
 
-    PreparedStatement ps =
-        conexion.prepareStatement(
-            "SELECT id_chat, titulo, descripcion, url_chat, icono FROM chats_home"
-        );
+        Integer idUsuario =
+            (Integer) session.getAttribute("id_usuario");
 
-    ResultSet rs = ps.executeQuery();
-
-    while (rs.next()) {
-
-        int idChat = rs.getInt("id_chat");
-
-        PreparedStatement psFav =
+        PreparedStatement ps =
             conexion.prepareStatement(
-                "SELECT 1 FROM favoritos " +
-                "WHERE id_usuario = ? " +
-                "AND tipo_contenido = 'chat' " +
-                "AND id_contenido = ?"
+                "SELECT id_chat, titulo, descripcion, url_chat, icono FROM chats_home"
             );
 
-        psFav.setInt(1, idUsuario);
-        psFav.setInt(2, idChat);
+        ResultSet rs = ps.executeQuery();
 
-        ResultSet rsFav =
-            psFav.executeQuery();
+        while (rs.next()) {
 
-        boolean esFavorito =
-            rsFav.next();
+            int idChat = rs.getInt("id_chat");
 
-        rsFav.close();
-        psFav.close();
+            PreparedStatement psFav =
+                conexion.prepareStatement(
+                    "SELECT 1 FROM favoritos " +
+                    "WHERE id_usuario = ? " +
+                    "AND tipo_contenido = 'chat' " +
+                    "AND id_contenido = ?"
+                );
+
+            psFav.setInt(1, idUsuario);
+            psFav.setInt(2, idChat);
+
+            ResultSet rsFav =
+                psFav.executeQuery();
+
+            boolean esFavorito =
+                rsFav.next();
+
+            rsFav.close();
+            psFav.close();
 %>
 
 <!-- CHAT -->
@@ -383,21 +414,23 @@
                 <!-- ABRIR CHAT -->
                 <a href="<%= rs.getString("url_chat") %>"
                    target="_blank"
-                   class="btn btn-outline-primary btn-sm me-2">
+                   class="btn btn-outline-primary btn-sm me-2"
+                   tabindex="0"
+                   aria-label="Abrir chat">
 
                     Abrir chat
 
                 </a>
 
-                <!-- FAVORITOS -->
                 <% if (esFavorito) { %>
 
-                    <!-- BOTÓN QUITAR -->
+                    <!-- QUITAR -->
                     <button type="button"
                             class="btn btn-outline-danger btn-sm"
                             data-bs-toggle="modal"
                             data-bs-target="#modalQuitar"
                             data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= idChat %>"
+                            tabindex="0"
                             aria-label="Quitar de favoritos">
 
                         ❤️ Quitar de favoritos
@@ -408,7 +441,9 @@
 
                     <!-- AGREGAR -->
                     <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=chat&id_contenido=<%= idChat %>"
-                       class="btn btn-outline-warning btn-sm">
+                       class="btn btn-outline-warning btn-sm"
+                       tabindex="0"
+                       aria-label="Marcar como favorito">
 
                         🤍 Marcar como favorito
 
@@ -425,11 +460,19 @@
 </div>
 
 <%
-    }
+        }
 
-    rs.close();
-    ps.close();
+        rs.close();
+        ps.close();
+
+    } catch (Exception e) {
+
+        response.sendRedirect("error.jsp");
+        return;
+    }
 %>
+
+            </div>
 
         </div>
 
@@ -585,6 +628,38 @@ document.getElementById('modalQuitar')
     .setAttribute('href', url);
 
 });
+
+function ordenarChats(orden) {
+
+    var cont =
+        document.getElementById('contenedorChats');
+
+    var cards =
+        Array.from(
+            cont.querySelectorAll('.card.mb-3')
+        );
+
+    cards.sort(function(a, b) {
+
+        var ta =
+            a.querySelector('.card-title')
+             .textContent.trim();
+
+        var tb =
+            b.querySelector('.card-title')
+             .textContent.trim();
+
+        return orden === 'az'
+            ? ta.localeCompare(tb)
+            : tb.localeCompare(ta);
+    });
+
+    cards.forEach(function(c) {
+
+        cont.appendChild(c);
+
+    });
+}
 
 </script>
 
