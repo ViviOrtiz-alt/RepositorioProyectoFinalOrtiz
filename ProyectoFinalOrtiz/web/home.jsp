@@ -5,23 +5,44 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@ page import="java.sql.*" %>
+
 <%@ include file="conexion.jsp" %>
 
 <%
-    // Evita cache
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    // =========================
+    // EVITAR CACHE
+    // =========================
+
+    response.setHeader(
+        "Cache-Control",
+        "no-cache, no-store, must-revalidate"
+    );
+
     response.setHeader("Pragma", "no-cache");
+
     response.setDateHeader("Expires", 0);
 
-    // Validar sesión
+    // =========================
+    // VALIDAR SESIÓN
+    // =========================
+
     if (session.getAttribute("correo") == null) {
+
         response.sendRedirect("index.jsp");
         return;
     }
+
+    // =========================
+    // TOAST CONFIRMACIÓN
+    // =========================
+
+    String ok = request.getParameter("ok");
 %>
 
 <!DOCTYPE html>
+
 <html lang="es">
 
 <head>
@@ -35,20 +56,58 @@
 
     <link href="css/styles.css" rel="stylesheet" />
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+
 </head>
 
 <body>
 
-<!-- Barra navegación -->
+<!-- TOAST -->
+<% if ("1".equals(ok)) { %>
+
+<div class="position-fixed bottom-0 end-0 p-3"
+     style="z-index:1100">
+
+    <div id="toastOk"
+         class="toast align-items-center text-white bg-success border-0 show"
+         role="alert"
+         aria-live="assertive">
+
+        <div class="d-flex">
+
+            <div class="toast-body">
+
+                ✅ Favorito actualizado correctamente.
+
+            </div>
+
+            <button type="button"
+                    class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast">
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<% } %>
+
+<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
 
     <div class="container">
 
         <a class="navbar-brand" href="#!">
+
             Aprendizaje Digital
+
         </a>
 
-        <!-- Opciones nav -->
+        <!-- NAV -->
         <ul class="navbar-nav ms-auto align-items-center">
 
             <li class="nav-item">
@@ -66,7 +125,7 @@
 
         </ul>
 
-        <!-- Dropdown usuario -->
+        <!-- DROPDOWN -->
         <div class="dropdown ms-2">
 
             <button class="btn btn-dark dropdown-toggle"
@@ -83,7 +142,9 @@
                 <li class="px-3 py-2 text-center">
 
                     <strong>
+
                         <%= session.getAttribute("nombre") %>
+
                     </strong>
 
                     <br>
@@ -97,10 +158,12 @@
                 </li>
 
                 <li>
+
                     <hr class="dropdown-divider">
+
                 </li>
 
-                <!-- BOTÓN LOGOUT -->
+                <!-- LOGOUT -->
                 <li class="text-center">
 
                     <button type="button"
@@ -144,10 +207,13 @@
 <section class="container my-5 text-center">
 
     <h2 class="fw-bold mb-3">
+
         Bienvenido a Aprendizaje Digital
+
     </h2>
 
-    <p class="text-muted mx-auto" style="max-width: 750px;">
+    <p class="text-muted mx-auto"
+       style="max-width: 750px;">
 
         Este espacio está diseñado para facilitar el aprendizaje
         sobre la Inteligencia Artificial y sus aplicaciones actuales.
@@ -167,7 +233,7 @@
 
     <div class="row g-3">
 
-        <!-- TARJETA 1 -->
+        <!-- CARD 1 -->
         <div class="col-md-6">
 
             <div class="card h-100 shadow-sm">
@@ -195,7 +261,7 @@
 
         </div>
 
-        <!-- TARJETA 2 -->
+        <!-- CARD 2 -->
         <div class="col-md-6">
 
             <div class="card h-100 shadow-sm">
@@ -227,7 +293,7 @@
 
 </section>
 
-<!-- Imagen -->
+<!-- IMAGEN -->
 <div class="py-5 bg-image-full"
      style="background-image: url('img/Inicio3.jpg')">
 
@@ -274,9 +340,11 @@
         psFav.setInt(1, idUsuario);
         psFav.setInt(2, idChat);
 
-        ResultSet rsFav = psFav.executeQuery();
+        ResultSet rsFav =
+            psFav.executeQuery();
 
-        boolean esFavorito = rsFav.next();
+        boolean esFavorito =
+            rsFav.next();
 
         rsFav.close();
         psFav.close();
@@ -312,6 +380,7 @@
 
                 </p>
 
+                <!-- ABRIR CHAT -->
                 <a href="<%= rs.getString("url_chat") %>"
                    target="_blank"
                    class="btn btn-outline-primary btn-sm me-2">
@@ -320,17 +389,24 @@
 
                 </a>
 
+                <!-- FAVORITOS -->
                 <% if (esFavorito) { %>
 
-                    <a href="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= idChat %>"
-                       class="btn btn-outline-danger btn-sm">
+                    <!-- BOTÓN QUITAR -->
+                    <button type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalQuitar"
+                            data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= idChat %>"
+                            aria-label="Quitar de favoritos">
 
                         ❤️ Quitar de favoritos
 
-                    </a>
+                    </button>
 
                 <% } else { %>
 
+                    <!-- AGREGAR -->
                     <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=chat&id_contenido=<%= idChat %>"
                        class="btn btn-outline-warning btn-sm">
 
@@ -436,8 +512,81 @@
 
 </div>
 
-<!-- Bootstrap -->
+<!-- MODAL FAVORITOS -->
+<div class="modal fade"
+     id="modalQuitar"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Quitar de favoritos
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                ¿Deseas quitar este chat de favoritos?
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <a id="btnConfirmarQuitar"
+                   href="#"
+                   class="btn btn-danger">
+
+                    Sí, quitar
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SCRIPT MODAL -->
+<script>
+
+document.getElementById('modalQuitar')
+.addEventListener('show.bs.modal', function(e) {
+
+    var url =
+        e.relatedTarget.getAttribute('data-url');
+
+    document.getElementById('btnConfirmarQuitar')
+    .setAttribute('href', url);
+
+});
+
+</script>
 
 </body>
 
