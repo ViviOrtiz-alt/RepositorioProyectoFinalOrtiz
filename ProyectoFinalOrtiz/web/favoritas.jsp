@@ -162,64 +162,110 @@
 
 </h2>
 
+<!-- FILTRO -->
+<div class="container text-end my-3">
+
+    <label for="filtroTipo"
+           class="me-2 text-muted">
+
+        Filtrar:
+
+    </label>
+
+    <select id="filtroTipo"
+            class="form-select form-select-sm d-inline-block w-auto"
+            onchange="filtrarFavoritos(this.value)"
+            aria-label="Filtrar favoritos">
+
+        <option value="todos">
+
+            Todos
+
+        </option>
+
+        <option value="tarjeta">
+
+            Tarjetas
+
+        </option>
+
+        <option value="video">
+
+            Videos
+
+        </option>
+
+        <option value="chat">
+
+            Chats
+
+        </option>
+
+    </select>
+
+</div>
+
 <!-- CONTENEDOR -->
 <div class="tarjetas-container">
 
 <%
-    // =========================
-    // CONSULTAR FAVORITOS
-    // =========================
-
-    PreparedStatement ps =
-        conexion.prepareStatement(
-
-            "SELECT f.tipo_contenido, f.id_contenido, " +
-
-            "t.titulo AS tarjeta_titulo, " +
-            "t.frente, t.reverso, " +
-
-            "v.titulo AS video_titulo, " +
-            "v.descripcion, v.url_video, " +
-
-            "c.titulo AS chat_titulo, " +
-            "c.descripcion AS chat_descripcion " +
-
-            "FROM favoritos f " +
-
-            "LEFT JOIN tarjetas_estudio t " +
-            "ON f.tipo_contenido='tarjeta' " +
-            "AND f.id_contenido=t.id_tarjeta " +
-
-            "LEFT JOIN videos v " +
-            "ON f.tipo_contenido='video' " +
-            "AND f.id_contenido=v.id_video " +
-
-            "LEFT JOIN chats_home c " +
-            "ON f.tipo_contenido='chat' " +
-            "AND f.id_contenido=c.id_chat " +
-
-            "WHERE f.id_usuario = ?"
-
-        );
-
-    ps.setInt(1, idUsuario);
-
-    ResultSet rs =
-        ps.executeQuery();
-
-    while (rs.next()) {
-
-        String tipo =
-            rs.getString("tipo_contenido");
+    try {
 
         // =========================
-        // TARJETAS
+        // CONSULTAR FAVORITOS
         // =========================
 
-        if ("tarjeta".equals(tipo)) {
+        PreparedStatement ps =
+            conexion.prepareStatement(
+
+                "SELECT f.tipo_contenido, f.id_contenido, " +
+
+                "t.titulo AS tarjeta_titulo, " +
+                "t.frente, t.reverso, " +
+
+                "v.titulo AS video_titulo, " +
+                "v.descripcion, v.url_video, " +
+
+                "c.titulo AS chat_titulo, " +
+                "c.descripcion AS chat_descripcion " +
+
+                "FROM favoritos f " +
+
+                "LEFT JOIN tarjetas_estudio t " +
+                "ON f.tipo_contenido='tarjeta' " +
+                "AND f.id_contenido=t.id_tarjeta " +
+
+                "LEFT JOIN videos v " +
+                "ON f.tipo_contenido='video' " +
+                "AND f.id_contenido=v.id_video " +
+
+                "LEFT JOIN chats_home c " +
+                "ON f.tipo_contenido='chat' " +
+                "AND f.id_contenido=c.id_chat " +
+
+                "WHERE f.id_usuario = ?"
+
+            );
+
+        ps.setInt(1, idUsuario);
+
+        ResultSet rs =
+            ps.executeQuery();
+
+        while (rs.next()) {
+
+            String tipo =
+                rs.getString("tipo_contenido");
+
+            // =========================
+            // TARJETAS
+            // =========================
+
+            if ("tarjeta".equals(tipo)) {
 %>
 
-<div class="favorita tarjeta">
+<div class="favorita tarjeta"
+     data-tipo="tarjeta">
 
     <div class="tarjeta-inner">
 
@@ -253,6 +299,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#modalQuitar"
                     data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=tarjeta&id_contenido=<%= rs.getInt("id_contenido") %>"
+                    tabindex="0"
                     aria-label="Quitar de favoritos">
 
                 ❤️ Quitar de favoritos
@@ -266,14 +313,15 @@
 </div>
 
 <%
-        // =========================
-        // VIDEOS
-        // =========================
+            // =========================
+            // VIDEOS
+            // =========================
 
-        } else if ("video".equals(tipo)) {
+            } else if ("video".equals(tipo)) {
 %>
 
-<div class="favorita video">
+<div class="favorita video"
+     data-tipo="video">
 
     <h3>
 
@@ -299,6 +347,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalQuitar"
             data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=video&id_contenido=<%= rs.getInt("id_contenido") %>"
+            tabindex="0"
             aria-label="Quitar de favoritos">
 
         ❤️ Quitar de favoritos
@@ -308,14 +357,15 @@
 </div>
 
 <%
-        // =========================
-        // CHATS
-        // =========================
+            // =========================
+            // CHATS
+            // =========================
 
-        } else if ("chat".equals(tipo)) {
+            } else if ("chat".equals(tipo)) {
 %>
 
-<div class="favorita chat">
+<div class="favorita chat"
+     data-tipo="chat">
 
     <h3>
 
@@ -343,6 +393,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalQuitar"
             data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=chat&id_contenido=<%= rs.getInt("id_contenido") %>"
+            tabindex="0"
             aria-label="Quitar de favoritos">
 
         ❤️ Quitar de favoritos
@@ -352,11 +403,17 @@
 </div>
 
 <%
+            }
         }
-    }
 
-    rs.close();
-    ps.close();
+        rs.close();
+        ps.close();
+
+    } catch (Exception e) {
+
+        response.sendRedirect("error.jsp");
+        return;
+    }
 %>
 
 </div>
@@ -436,8 +493,12 @@
 <!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SCRIPT MODAL -->
+<!-- SCRIPT -->
 <script>
+
+// =========================
+// MODAL FAVORITOS
+// =========================
 
 document.getElementById('modalQuitar')
 .addEventListener('show.bs.modal', function(e) {
@@ -449,6 +510,38 @@ document.getElementById('modalQuitar')
     .setAttribute('href', url);
 
 });
+
+// =========================
+// FILTRAR FAVORITOS
+// =========================
+
+function filtrarFavoritos(tipo) {
+
+    var cards =
+        document.querySelectorAll('.favorita');
+
+    cards.forEach(function(card) {
+
+        if (tipo === 'todos') {
+
+            card.style.display = '';
+
+        } else {
+
+            if (card.getAttribute('data-tipo') === tipo) {
+
+                card.style.display = '';
+
+            } else {
+
+                card.style.display = 'none';
+
+            }
+        }
+
+    });
+
+}
 
 </script>
 

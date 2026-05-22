@@ -149,6 +149,37 @@
 
 </h2>
 
+<!-- ORDENAMIENTO -->
+<div class="container text-end my-3">
+
+    <label for="ordenVideos"
+           class="me-2 text-muted">
+
+        Ordenar:
+
+    </label>
+
+    <select id="ordenVideos"
+            class="form-select form-select-sm d-inline-block w-auto"
+            onchange="ordenarVideos(this.value)"
+            aria-label="Ordenar videos">
+
+        <option value="az">
+
+            A → Z
+
+        </option>
+
+        <option value="za">
+
+            Z → A
+
+        </option>
+
+    </select>
+
+</div>
+
 <!-- CONTENEDOR -->
 <div class="listado-videos">
 
@@ -218,6 +249,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#modalQuitar"
                 data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=video&id_contenido=<%= idVideo %>"
+                tabindex="0"
                 aria-label="Quitar de favoritos">
 
             ❤️ Quitar de favoritos
@@ -228,7 +260,9 @@
 
         <!-- AGREGAR FAVORITO -->
         <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=video&id_contenido=<%= idVideo %>"
-           class="btn btn-outline-warning btn-sm mt-2">
+           class="btn btn-outline-warning btn-sm mt-2"
+           tabindex="0"
+           aria-label="Marcar como favorito">
 
             🤍 Marcar como favorito
 
@@ -322,8 +356,12 @@
 <!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SCRIPT MODAL -->
+<!-- SCRIPT -->
 <script>
+
+// =========================
+// MODAL FAVORITOS
+// =========================
 
 document.getElementById('modalQuitar')
 .addEventListener('show.bs.modal', function(e) {
@@ -335,6 +373,44 @@ document.getElementById('modalQuitar')
     .setAttribute('href', url);
 
 });
+
+// =========================
+// ORDENAR VIDEOS
+// =========================
+
+function ordenarVideos(orden) {
+
+    var cont =
+        document.querySelector('.listado-videos');
+
+    var cards =
+        Array.from(
+            cont.querySelectorAll('.video-card')
+        );
+
+    cards.sort(function(a, b) {
+
+        var ta =
+            a.querySelector('h3')
+             .textContent.trim();
+
+        var tb =
+            b.querySelector('h3')
+             .textContent.trim();
+
+        return orden === 'az'
+            ? ta.localeCompare(tb)
+            : tb.localeCompare(ta);
+
+    });
+
+    cards.forEach(function(c) {
+
+        cont.appendChild(c);
+
+    });
+
+}
 
 </script>
 

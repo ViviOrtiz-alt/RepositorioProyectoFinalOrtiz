@@ -43,6 +43,7 @@
 
     <link href="css/styles.css" rel="stylesheet">
 
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
           rel="stylesheet">
 
@@ -146,6 +147,37 @@
 
 </h2>
 
+<!-- ORDENAMIENTO -->
+<div class="container text-end my-3">
+
+    <label for="ordenTarjetas"
+           class="me-2 text-muted">
+
+        Ordenar:
+
+    </label>
+
+    <select id="ordenTarjetas"
+            class="form-select form-select-sm d-inline-block w-auto"
+            onchange="ordenarTarjetas(this.value)"
+            aria-label="Ordenar tarjetas">
+
+        <option value="az">
+
+            A → Z
+
+        </option>
+
+        <option value="za">
+
+            Z → A
+
+        </option>
+
+    </select>
+
+</div>
+
 <!-- CONTENEDOR -->
 <div class="tarjetas-container">
 
@@ -187,6 +219,7 @@
             psFav.executeQuery();
 
         if (rsFav.next()) {
+
             esFavorita = true;
         }
 
@@ -234,6 +267,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#modalQuitar"
                         data-url="marcarFavorita.jsp?accion=quitar&tipo_contenido=tarjeta&id_contenido=<%= idTarjeta %>"
+                        tabindex="0"
                         aria-label="Quitar de favoritas">
 
                     <i class="bi bi-heart-fill"></i>
@@ -246,7 +280,9 @@
 
                 <!-- AGREGAR FAVORITO -->
                 <a href="marcarFavorita.jsp?accion=agregar&tipo_contenido=tarjeta&id_contenido=<%= idTarjeta %>"
-                   class="btn btn-sm btn-outline-warning mt-2">
+                   class="btn btn-sm btn-outline-warning mt-2"
+                   tabindex="0"
+                   aria-label="Marcar como favorita">
 
                     <i class="bi bi-heart"></i>
 
@@ -346,8 +382,12 @@
 <!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SCRIPT MODAL -->
+<!-- SCRIPT -->
 <script>
+
+// =========================
+// MODAL FAVORITOS
+// =========================
 
 document.getElementById('modalQuitar')
 .addEventListener('show.bs.modal', function(e) {
@@ -359,6 +399,44 @@ document.getElementById('modalQuitar')
     .setAttribute('href', url);
 
 });
+
+// =========================
+// ORDENAR TARJETAS
+// =========================
+
+function ordenarTarjetas(orden) {
+
+    var cont =
+        document.querySelector('.tarjetas-container');
+
+    var cards =
+        Array.from(
+            cont.querySelectorAll('.tarjeta')
+        );
+
+    cards.sort(function(a, b) {
+
+        var ta =
+            a.querySelector('h4')
+             .textContent.trim();
+
+        var tb =
+            b.querySelector('h4')
+             .textContent.trim();
+
+        return orden === 'az'
+            ? ta.localeCompare(tb)
+            : tb.localeCompare(ta);
+
+    });
+
+    cards.forEach(function(c) {
+
+        cont.appendChild(c);
+
+    });
+
+}
 
 </script>
 
